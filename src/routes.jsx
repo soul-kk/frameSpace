@@ -1,9 +1,10 @@
-import { createBrowserRouter } from 'react-router';
-import { MainLayout } from './layout/MainLayout';
-import { Home } from './pages/Home';
-import { MovieList } from './pages/MovieList';
-import { MovieDetail } from './pages/MovieDetail';
-import { UploadPage } from './pages/Upload';
+import { createBrowserRouter } from 'react-router'
+import { MainLayout } from './layout/MainLayout.tsx'
+import { Home } from './pages/Home'
+import { MovieList } from './pages/MovieList'
+import { MovieDetail } from './pages/MovieDetail'
+import { UploadPage } from './pages/Upload'
+import { Gallery } from './pages/Gallery'
 
 const routes = createBrowserRouter([
   {
@@ -25,8 +26,12 @@ const routes = createBrowserRouter([
         path: '/upload',
         element: <UploadPage />,
       },
+      {
+        path: '/gallery',
+        element: <Gallery />,
+      },
     ],
   },
-]);
+])
 
-export default routes;
+export default routes

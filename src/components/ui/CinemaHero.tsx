@@ -21,8 +21,8 @@ export const CinemaHero = () => {
         // Make canvas position absolute to sit behind content
         canvas.position(0, 0);
         canvas.style('z-index', '-1');
-        canvas.style('opacity', '0.1');
-        
+        canvas.style('opacity', '1');
+
         // Create film strip particles
         for (let i = 0; i < 20; i++) {
           particles.push({
@@ -37,19 +37,19 @@ export const CinemaHero = () => {
 
       p.draw = () => {
         p.clear();
-        
+
         // Draw film strip elements
         for (let particle of particles) {
           p.fill(0, 0, 0, particle.opacity * 255);
           p.noStroke();
-          
+
           // Draw film strip holes
           for (let i = 0; i < 5; i++) {
             let holeX = particle.x + i * 8;
             let holeY = particle.y;
             p.ellipse(holeX, holeY, 4, 4);
           }
-          
+
           particle.x += particle.speed;
           if (particle.x > p.width + 50) {
             particle.x = -50;
@@ -96,7 +96,7 @@ export const CinemaHero = () => {
         translateY: [20, 0],
         delay: 100
       }, '-=600');
-      
+
   }, []);
 
   return (
@@ -105,36 +105,37 @@ export const CinemaHero = () => {
 
       <div className="relative z-10 max-w-7xl mx-auto px-6 py-20 text-center">
         <div className="mb-16">
-          <h1 
+          <h1
             ref={titleRef}
             className="hero-title text-black mb-6 opacity-0"
           >
             My Favorite<br />
-            <span className="text-gray-600">Movies</span>
+            <span className="text-gray-600">movie & photograph</span>
           </h1>
-          
-          <p 
+
+          <p
             ref={subtitleRef}
             className="text-xl text-gray-600 max-w-2xl mx-auto mb-8 opacity-0"
           >
-            精心挑选的电影杰作集合，展现了我对故事叙述和视觉艺术的热爱。
+            我的摄影集与喜爱的电影，展现我对故事叙述和视觉艺术的热爱。
           </p>
-          
-          <div 
+
+          <div
             ref={buttonsRef}
             className="flex flex-col sm:flex-row gap-4 justify-center opacity-0"
           >
-            <Link 
-              to="/list"
+            <Link
+              to="/gallery"
               className="bg-black text-white px-8 py-3 rounded-full font-medium hover:bg-gray-800 transition-all duration-300 transform hover:scale-105"
             >
-              浏览收藏
+              摄影画廊
             </Link>
-            <Link 
-              to="/upload"
+            <Link
+
+              to="/list"
               className="border-2 border-black text-black px-8 py-3 rounded-full font-medium hover:bg-black hover:text-white transition-all duration-300"
             >
-              添加电影
+              电影列表
             </Link>
           </div>
         </div>

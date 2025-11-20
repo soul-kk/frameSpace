@@ -1,12 +1,12 @@
-@import "tailwindcss";
+@import 'tailwindcss';
 
 @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700&family=Noto+Serif+SC:wght@400;500;700&family=ZCOOL+XiaoWei&display=swap');
 
 @theme {
-  --font-sans: "Noto Sans SC", sans-serif;
-  --font-serif: "Noto Serif SC", serif;
-  --font-display: "ZCOOL XiaoWei", serif;
-  
+  --font-sans: 'Noto Sans SC', sans-serif;
+  --font-serif: 'Noto Serif SC', serif;
+  --font-display: 'ZCOOL XiaoWei', serif;
+
   --color-primary: #1a1a1a;
 }
 
@@ -18,14 +18,15 @@
     background-size: 100px 10px;
     height: 10px;
   }
-  
+
   .hero-title {
     font-family: var(--font-serif);
     font-weight: bold;
     font-size: 3.75rem; /* 6xl */
     line-height: 1.25;
   }
-  
+
+  /* 背景加载动画 */
   .loading-skeleton {
     background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
     background-size: 200% 100%;

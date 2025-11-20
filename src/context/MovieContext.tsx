@@ -113,7 +113,7 @@ export const MovieProvider: React.FC<{ children: ReactNode }> = ({ children }) =
 
     if (query) {
       const lowerQuery = query.toLowerCase();
-      filtered = filtered.filter(movie => 
+      filtered = filtered.filter(movie =>
         movie.title.toLowerCase().includes(lowerQuery) ||
         movie.director.toLowerCase().includes(lowerQuery) ||
         movie.description.toLowerCase().includes(lowerQuery) ||

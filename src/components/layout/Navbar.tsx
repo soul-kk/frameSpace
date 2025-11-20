@@ -1,3 +1,4 @@
+import React from 'react';
 import { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router';
 import { cn } from '../../lib/utils';
@@ -18,6 +19,7 @@ export const Navbar = () => {
 
   const navLinks = [
     { name: '首页', path: '/' },
+    { name: '画廊', path: '/gallery' },
     { name: '电影', path: '/list' },
     { name: '上传', path: '/upload' },
   ];
@@ -25,8 +27,8 @@ export const Navbar = () => {
   return (
     <nav className={cn(
       "fixed top-0 left-0 right-0 z-50 transition-all duration-300 border-b",
-      isScrolled || isMobileMenuOpen 
-        ? "bg-white/90 backdrop-blur-md border-gray-200 py-4" 
+      isScrolled || isMobileMenuOpen
+        ? "bg-white/90 backdrop-blur-md border-gray-200 py-4"
         : "bg-transparent border-transparent py-6"
     )}>
       <div className="max-w-7xl mx-auto px-6">
@@ -36,7 +38,7 @@ export const Navbar = () => {
             <div className="w-8 h-8 bg-black rounded-full flex items-center justify-center transition-transform group-hover:scale-110">
               <div className="w-3 h-3 bg-white rounded-full"></div>
             </div>
-            <span className="text-xl font-bold text-black">kk's favorite movies</span>
+            <span className="text-xl font-bold text-black">光影帧格</span>
           </Link>
 
           {/* Desktop Nav */}
@@ -58,7 +60,7 @@ export const Navbar = () => {
           </div>
 
           {/* Mobile Menu Button */}
-          <button 
+          <button
             className="md:hidden p-2"
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
           >
