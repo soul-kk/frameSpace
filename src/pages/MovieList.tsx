@@ -10,7 +10,7 @@ import { cn } from '../lib/utils';
 export const MovieList = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const { searchMovies } = useMovies();
-  
+
   const [view, setView] = useState<'grid' | 'list'>('grid');
   const [searchQuery, setSearchQuery] = useState('');
   const [activeGenre, setActiveGenre] = useState(searchParams.get('category') || 'all');
@@ -34,8 +34,8 @@ export const MovieList = () => {
   }, [searchParams]);
 
   useEffect(() => {
-    let result = searchMovies(searchQuery, { 
-      genre: activeGenre !== 'all' ? activeGenre : undefined 
+    let result = searchMovies(searchQuery, {
+      genre: activeGenre !== 'all' ? activeGenre : undefined
     });
 
     setFilteredMovies(result);
@@ -64,7 +64,7 @@ export const MovieList = () => {
       <div className="max-w-7xl mx-auto px-6 mb-8">
         <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
           <div className="flex flex-col lg:flex-row gap-6 justify-between items-center">
-            
+
             {/* Filter Tabs */}
             <div className="flex flex-wrap justify-center gap-2">
               {genres.map(genre => (
@@ -73,8 +73,8 @@ export const MovieList = () => {
                   onClick={() => handleGenreChange(genre.id)}
                   className={cn(
                     "px-4 py-2 rounded-full text-sm font-medium transition-all duration-300 border-2",
-                    activeGenre === genre.id 
-                      ? "bg-black text-white border-black" 
+                    activeGenre === genre.id
+                      ? "bg-black text-white border-black"
                       : "bg-transparent text-gray-600 border-gray-200 hover:border-black hover:text-black"
                   )}
                 >
@@ -154,39 +154,39 @@ const MovieListItem = ({ movie, index }: { movie: Movie; index: number }) => {
   // Use anime for entrance
   return (
     <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-4 flex flex-col sm:flex-row gap-6 hover:shadow-md transition-all duration-300">
-       <div className="w-full sm:w-48 h-64 sm:h-auto flex-shrink-0">
-         <img 
-           src={movie.poster} 
-           alt={movie.title} 
-           className="w-full h-full object-cover rounded-lg"
-         />
-       </div>
-       <div className="flex-1 flex flex-col justify-between py-2">
-         <div>
-           <div className="flex items-start justify-between mb-2">
-             <h3 className="text-2xl font-bold text-black">{movie.title}</h3>
-             <div className="flex items-center space-x-1 bg-yellow-50 px-2 py-1 rounded-lg">
-               <span className="text-yellow-500">★</span>
-               <span className="font-bold">{movie.rating.toFixed(1)}</span>
-             </div>
-           </div>
-           <div className="flex items-center space-x-3 text-sm text-gray-500 mb-4">
-             <span>{movie.year}</span>
-             <span className="w-1 h-1 bg-gray-300 rounded-full"></span>
-             <span className="capitalize">{movie.genre}</span>
-             <span className="w-1 h-1 bg-gray-300 rounded-full"></span>
-             <span>{movie.duration ? `${Math.floor(movie.duration / 60)}h ${movie.duration % 60}m` : 'N/A'}</span>
-           </div>
-           <p className="text-gray-600 line-clamp-3 mb-4">{movie.description}</p>
-           <p className="text-sm text-gray-500">
-             <span className="font-medium text-gray-900">Director:</span> {movie.director}
-           </p>
-         </div>
-         
-         <div className="mt-4 sm:mt-0 pt-4 sm:pt-0">
-           {/* Add link or button */}
-         </div>
-       </div>
+      <div className="w-full sm:w-48 h-64 sm:h-auto shrink-0">
+        <img
+          src={movie.poster}
+          alt={movie.title}
+          className="w-full h-full object-cover rounded-lg"
+        />
+      </div>
+      <div className="flex-1 flex flex-col justify-between py-2">
+        <div>
+          <div className="flex items-start justify-between mb-2">
+            <h3 className="text-2xl font-bold text-black">{movie.title}</h3>
+            <div className="flex items-center space-x-1 bg-yellow-50 px-2 py-1 rounded-lg">
+              <span className="text-yellow-500">★</span>
+              <span className="font-bold">{movie.rating.toFixed(1)}</span>
+            </div>
+          </div>
+          <div className="flex items-center space-x-3 text-sm text-gray-500 mb-4">
+            <span>{movie.year}</span>
+            <span className="w-1 h-1 bg-gray-300 rounded-full"></span>
+            <span className="capitalize">{movie.genre}</span>
+            <span className="w-1 h-1 bg-gray-300 rounded-full"></span>
+            <span>{movie.duration ? `${Math.floor(movie.duration / 60)}h ${movie.duration % 60}m` : 'N/A'}</span>
+          </div>
+          <p className="text-gray-600 line-clamp-3 mb-4">{movie.description}</p>
+          <p className="text-sm text-gray-500">
+            <span className="font-medium text-gray-900">Director:</span> {movie.director}
+          </p>
+        </div>
+
+        <div className="mt-4 sm:mt-0 pt-4 sm:pt-0">
+          {/* Add link or button */}
+        </div>
+      </div>
     </div>
   );
 };
