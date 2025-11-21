@@ -21,7 +21,7 @@ export const Navbar = () => {
     { name: '首页', path: '/' },
     { name: '画廊', path: '/gallery' },
     { name: '电影', path: '/list' },
-    { name: '上传', path: '/upload' },
+    // { name: '上传', path: '/upload' },
   ];
 
   return (

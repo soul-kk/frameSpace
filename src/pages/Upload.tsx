@@ -9,12 +9,12 @@ import { cn } from '../lib/utils';
 export const UploadPage = () => {
   const navigate = useNavigate();
   const { addMovie } = useMovies();
-  
+
   const [uploadedImage, setUploadedImage] = useState<string | null>(null);
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [showPreview, setShowPreview] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
-  
+
   const formRef = useRef<HTMLFormElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -37,7 +37,7 @@ export const UploadPage = () => {
     if (draft) {
       const data = JSON.parse(draft);
       if (data.poster) setUploadedImage(data.poster);
-      
+
       // Populate form fields
       if (formRef.current) {
         Object.keys(data).forEach(key => {
@@ -105,13 +105,13 @@ export const UploadPage = () => {
     if (!title) newErrors.title = 'Title is required';
     if (!year) newErrors.year = 'Year is required';
     else if (Number(year) < 1900 || Number(year) > 2030) newErrors.year = 'Year must be between 1900 and 2030';
-    
+
     if (!director) newErrors.director = 'Director is required';
     if (!genre) newErrors.genre = 'Genre is required';
-    
+
     if (!rating) newErrors.rating = 'Rating is required';
     else if (Number(rating) < 0 || Number(rating) > 10) newErrors.rating = 'Rating must be between 0 and 10';
-    
+
     if (!description) newErrors.description = 'Description is required';
     else if (description.length < 10) newErrors.description = 'Description must be at least 10 characters';
 
@@ -143,9 +143,9 @@ export const UploadPage = () => {
       // We store raw strings for inputs in draft to restore easily
       const rawData = Object.fromEntries(new FormData(formRef.current!).entries());
       if (uploadedImage) rawData.poster = uploadedImage;
-      
+
       localStorage.setItem('movieDraft', JSON.stringify(rawData));
-      
+
       // Show feedback
       const btn = document.getElementById('draft-btn');
       if (btn) {
@@ -171,7 +171,7 @@ export const UploadPage = () => {
         addMovie(movieData);
         localStorage.removeItem('movieDraft');
         setShowSuccess(true);
-        
+
         setTimeout(() => {
           navigate('/list');
         }, 2000);
@@ -201,11 +201,11 @@ export const UploadPage = () => {
       <div className="max-w-4xl mx-auto px-6">
         <div ref={containerRef} className="bg-white rounded-2xl shadow-xl p-8 opacity-0">
           <form ref={formRef} onSubmit={handleSubmit} className="space-y-8">
-            
+
             {/* Poster Upload */}
             <div>
               <label className="block text-sm font-semibold text-gray-700 mb-4">Movie Poster</label>
-              <div 
+              <div
                 className={cn(
                   "border-2 border-dashed border-gray-200 rounded-xl p-8 text-center cursor-pointer transition-all duration-300 hover:border-black hover:bg-gray-50",
                   errors.poster && "border-red-500 bg-red-50"
@@ -218,7 +218,7 @@ export const UploadPage = () => {
                 {uploadedImage ? (
                   <div className="relative group">
                     <img src={uploadedImage} alt="Preview" className="mx-auto max-h-96 rounded-lg shadow-md" />
-                    <button 
+                    <button
                       type="button"
                       onClick={(e) => {
                         e.stopPropagation();
@@ -239,15 +239,15 @@ export const UploadPage = () => {
                     <p className="text-xs text-gray-400 mt-2">PNG, JPG up to 10MB</p>
                   </div>
                 )}
-                <input 
-                  type="file" 
-                  id="poster-input" 
-                  accept="image/*" 
-                  className="hidden" 
-                  onChange={handleFileSelect} 
+                <input
+                  type="file"
+                  id="poster-input"
+                  accept="image/*"
+                  className="hidden"
+                  onChange={handleFileSelect}
                 />
               </div>
-              {errors.poster && <p className="text-red-500 text-sm mt-2 flex items-center gap-1"><AlertCircle className="w-4 h-4"/>{errors.poster}</p>}
+              {errors.poster && <p className="text-red-500 text-sm mt-2 flex items-center gap-1"><AlertCircle className="w-4 h-4" />{errors.poster}</p>}
             </div>
 
             {/* Movie Info Grid */}
@@ -255,8 +255,8 @@ export const UploadPage = () => {
               {/* Title */}
               <div>
                 <label htmlFor="title" className="block text-sm font-semibold text-gray-700 mb-2">Movie Title *</label>
-                <input 
-                  type="text" 
+                <input
+                  type="text"
                   name="title"
                   className={cn("w-full px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-black focus:ring-0 outline-none transition-all", errors.title && "border-red-500")}
                   placeholder="Enter movie title"
@@ -267,8 +267,8 @@ export const UploadPage = () => {
               {/* Year */}
               <div>
                 <label htmlFor="year" className="block text-sm font-semibold text-gray-700 mb-2">Release Year *</label>
-                <input 
-                  type="number" 
+                <input
+                  type="number"
                   name="year"
                   className={cn("w-full px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-black focus:ring-0 outline-none transition-all", errors.year && "border-red-500")}
                   placeholder="2024"
@@ -281,8 +281,8 @@ export const UploadPage = () => {
               {/* Director */}
               <div>
                 <label htmlFor="director" className="block text-sm font-semibold text-gray-700 mb-2">Director *</label>
-                <input 
-                  type="text" 
+                <input
+                  type="text"
                   name="director"
                   className={cn("w-full px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-black focus:ring-0 outline-none transition-all", errors.director && "border-red-500")}
                   placeholder="Director name"
@@ -293,19 +293,19 @@ export const UploadPage = () => {
               {/* Genre */}
               <div>
                 <label htmlFor="genre" className="block text-sm font-semibold text-gray-700 mb-2">Genre *</label>
-                <select 
+                <select
                   name="genre"
                   className={cn("w-full px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-black focus:ring-0 outline-none transition-all bg-white", errors.genre && "border-red-500")}
                 >
                   <option value="">Select genre</option>
-                  <option value="drama">Drama</option>
-                  <option value="action">Action</option>
-                  <option value="scifi">Sci-Fi</option>
-                  <option value="animation">Animation</option>
-                  <option value="thriller">Thriller</option>
-                  <option value="comedy">Comedy</option>
-                  <option value="horror">Horror</option>
-                  <option value="romance">Romance</option>
+                  <option value="剧情">剧情</option>
+                  <option value="动作">动作</option>
+                  <option value="科幻">科幻</option>
+                  <option value="动画">动画</option>
+                  <option value="惊悚">惊悚</option>
+                  <option value="喜剧">喜剧</option>
+                  <option value="恐怖">恐怖</option>
+                  <option value="爱情">爱情</option>
                 </select>
                 {errors.genre && <p className="text-red-500 text-sm mt-1">{errors.genre}</p>}
               </div>
@@ -313,8 +313,8 @@ export const UploadPage = () => {
               {/* Rating */}
               <div>
                 <label htmlFor="rating" className="block text-sm font-semibold text-gray-700 mb-2">Rating *</label>
-                <input 
-                  type="number" 
+                <input
+                  type="number"
                   name="rating"
                   step="0.1"
                   className={cn("w-full px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-black focus:ring-0 outline-none transition-all", errors.rating && "border-red-500")}
@@ -328,8 +328,8 @@ export const UploadPage = () => {
               {/* Duration */}
               <div>
                 <label htmlFor="duration" className="block text-sm font-semibold text-gray-700 mb-2">Duration (minutes)</label>
-                <input 
-                  type="number" 
+                <input
+                  type="number"
                   name="duration"
                   className="w-full px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-black focus:ring-0 outline-none transition-all"
                   placeholder="120"
@@ -341,7 +341,7 @@ export const UploadPage = () => {
             {/* Description */}
             <div>
               <label htmlFor="description" className="block text-sm font-semibold text-gray-700 mb-2">Description *</label>
-              <textarea 
+              <textarea
                 name="description"
                 rows={4}
                 className={cn("w-full px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-black focus:ring-0 outline-none transition-all", errors.description && "border-red-500")}
@@ -353,8 +353,8 @@ export const UploadPage = () => {
             {/* Actors */}
             <div>
               <label htmlFor="actors" className="block text-sm font-semibold text-gray-700 mb-2">Main Actors</label>
-              <input 
-                type="text" 
+              <input
+                type="text"
                 name="actors"
                 className="w-full px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-black focus:ring-0 outline-none transition-all"
                 placeholder="Actor 1, Actor 2, Actor 3"
@@ -364,22 +364,22 @@ export const UploadPage = () => {
 
             {/* Actions */}
             <div className="flex items-center justify-end pt-6 border-t border-gray-100 gap-4">
-              <button 
-                type="button" 
+              <button
+                type="button"
                 id="draft-btn"
                 onClick={handleSaveDraft}
                 className="px-6 py-3 rounded-full font-medium text-gray-700 border border-gray-200 hover:bg-gray-50 transition-colors"
               >
                 保存草稿
               </button>
-              <button 
+              <button
                 type="button"
                 onClick={togglePreview}
                 className="px-6 py-3 rounded-full font-medium text-gray-700 border border-gray-200 hover:bg-gray-50 transition-colors"
               >
                 预览
               </button>
-              <button 
+              <button
                 type="submit"
                 className="bg-black text-white px-8 py-3 rounded-full font-medium hover:bg-gray-800 transition-all shadow-lg hover:shadow-xl transform hover:-translate-y-1"
               >
@@ -401,10 +401,10 @@ export const UploadPage = () => {
                   <X className="w-6 h-6" />
                 </button>
               </div>
-              
+
               <div className="bg-gray-50 rounded-xl p-6 flex flex-col sm:flex-row gap-6">
                 <div className="w-full sm:w-32 h-48 flex-shrink-0">
-                   <img src={uploadedImage || ''} alt="Preview" className="w-full h-full object-cover rounded-lg shadow-md" />
+                  <img src={uploadedImage || ''} alt="Preview" className="w-full h-full object-cover rounded-lg shadow-md" />
                 </div>
                 <div className="flex-1">
                   <h3 className="text-2xl font-bold text-black mb-2">{getFormData()?.title}</h3>
@@ -419,13 +419,13 @@ export const UploadPage = () => {
               </div>
 
               <div className="flex items-center justify-end gap-4 mt-6 pt-6 border-t border-gray-100">
-                <button 
+                <button
                   onClick={() => setShowPreview(false)}
                   className="px-6 py-2 rounded-full text-gray-600 hover:bg-gray-100 transition-colors"
                 >
                   Close
                 </button>
-                <button 
+                <button
                   onClick={(e) => {
                     setShowPreview(false);
                     handleSubmit(e as any);

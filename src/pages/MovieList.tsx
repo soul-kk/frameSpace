@@ -14,17 +14,18 @@ export const MovieList = () => {
   const [view, setView] = useState<'grid' | 'list'>('grid');
   const [searchQuery, setSearchQuery] = useState('');
   const [activeGenre, setActiveGenre] = useState(searchParams.get('category') || 'all');
-  const [sortBy, setSortBy] = useState('default');
   const [filteredMovies, setFilteredMovies] = useState<Movie[]>([]);
 
   const genres = [
     { id: 'all', label: '全部' },
-    { id: 'drama', label: '剧情' },
-    { id: 'action', label: '动作' },
-    { id: 'scifi', label: '科幻' },
-    { id: 'animation', label: '动画' },
-    { id: 'comedy', label: '喜剧' },
-    { id: 'thriller', label: '惊悚' },
+    { id: '剧情', label: '剧情' },
+    { id: '动作', label: '动作' },
+    { id: '科幻', label: '科幻' },
+    { id: '动画', label: '动画' },
+    { id: '喜剧', label: '喜剧' },
+    { id: '惊悚', label: '惊悚' },
+    { id: '爱情', label: '爱情' },
+    { id: '恐怖', label: '恐怖' },
   ];
 
   useEffect(() => {
@@ -37,27 +38,8 @@ export const MovieList = () => {
       genre: activeGenre !== 'all' ? activeGenre : undefined 
     });
 
-    // Sorting
-    switch (sortBy) {
-      case 'title':
-        result.sort((a, b) => a.title.localeCompare(b.title));
-        break;
-      case 'year':
-        result.sort((a, b) => b.year - a.year);
-        break;
-      case 'year-asc':
-        result.sort((a, b) => a.year - b.year);
-        break;
-      case 'rating':
-        result.sort((a, b) => b.rating - a.rating);
-        break;
-      default:
-        // Default sorting (maybe by ID or original order)
-        break;
-    }
-
     setFilteredMovies(result);
-  }, [searchQuery, activeGenre, sortBy, searchMovies]);
+  }, [searchQuery, activeGenre, searchMovies]);
 
   const handleGenreChange = (genre: string) => {
     setActiveGenre(genre);
@@ -113,19 +95,6 @@ export const MovieList = () => {
                 />
                 <Search className="w-5 h-5 text-gray-400 absolute left-3 top-1/2 -translate-y-1/2" />
               </div>
-
-              {/* Sort */}
-              <select
-                value={sortBy}
-                onChange={(e) => setSortBy(e.target.value)}
-                className="px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-black/5 focus:border-black transition-all outline-none cursor-pointer"
-              >
-                <option value="default">默认排序</option>
-                <option value="rating">评分最高</option>
-                <option value="year">年份 (新→旧)</option>
-                <option value="year-asc">年份 (旧→新)</option>
-                <option value="title">名称 (A-Z)</option>
-              </select>
 
               {/* View Toggle */}
               <div className="flex items-center bg-gray-50 rounded-xl p-1 border border-gray-200">

@@ -22,10 +22,10 @@ const routes = createBrowserRouter([
         path: '/detail/:id',
         element: <MovieDetail />,
       },
-      {
-        path: '/upload',
-        element: <UploadPage />,
-      },
+      // {
+      //   path: '/upload',
+      //   element: <UploadPage />,
+      // },
       {
         path: '/gallery',
         element: <Gallery />,

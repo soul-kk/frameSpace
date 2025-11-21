@@ -1,5 +1,5 @@
 import React from 'react';
 
 export const Gallery = () => {
-  return <div>Gallery</div>;
+  return <div className='min-h-screen'>Gallery</div>;
 };
