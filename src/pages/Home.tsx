@@ -6,8 +6,9 @@ import { useMovies } from '../context/MovieContext';
 import MusicPlayer from '../components/ui/MusicPlayer';
 
 export const Home = () => {
-  const { getFeaturedMovies } = useMovies();
-  const featuredMovies = getFeaturedMovies(5);
+  const { movies, loading } = useMovies();
+  // Get top 5 movies by rating
+  const featuredMovies = [...movies].sort((a, b) => b.rating - a.rating).slice(0, 5);
 
   const carouselRef = useRef<HTMLDivElement>(null);
 
@@ -30,13 +31,10 @@ export const Home = () => {
 
       {/* Featured Movies Carousel */}
       <div ref={carouselRef} className="opacity-0 max-w-7xl mx-auto px-6 -mt-10 relative z-20 mb-20">
-        {/* <FeaturedCarousel movies={featuredMovies} /> */}
+        {!loading && <FeaturedCarousel movies={featuredMovies} />}
       </div>
 
       <MusicPlayer />
     </div>
   );
 };
-
-
-

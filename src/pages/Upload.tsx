@@ -8,7 +8,7 @@ import { cn } from '../lib/utils';
 
 export const UploadPage = () => {
   const navigate = useNavigate();
-  const { addMovie } = useMovies();
+  // const { addMovie } = useMovies();
 
   const [uploadedImage, setUploadedImage] = useState<string | null>(null);
   const [errors, setErrors] = useState<Record<string, string>>({});
@@ -168,13 +168,14 @@ export const UploadPage = () => {
     if (validateForm(formData)) {
       const movieData = getFormData();
       if (movieData) {
-        addMovie(movieData);
-        localStorage.removeItem('movieDraft');
-        setShowSuccess(true);
-
-        setTimeout(() => {
-          navigate('/list');
-        }, 2000);
+        // addMovie(movieData);
+        alert("Upload feature is temporarily disabled.");
+        // localStorage.removeItem('movieDraft');
+        // setShowSuccess(true);
+        
+        // setTimeout(() => {
+        //   navigate('/list');
+        // }, 2000);
       }
     }
   };

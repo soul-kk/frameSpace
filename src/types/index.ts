@@ -9,6 +9,8 @@ export interface Movie {
   description: string //描述
   actors: string[] //演员
   duration: number //时长
+  comment?: string // 评论
+  created_at?: string // 创建时间
 }
 
 export interface MovieFilters {

@@ -9,7 +9,7 @@ import { cn } from '../lib/utils';
 
 export const MovieList = () => {
   const [searchParams, setSearchParams] = useSearchParams();
-  const { searchMovies } = useMovies();
+  const { movies, loading } = useMovies();
 
   const [view, setView] = useState<'grid' | 'list'>('grid');
   const [searchQuery, setSearchQuery] = useState('');
@@ -34,12 +34,24 @@ export const MovieList = () => {
   }, [searchParams]);
 
   useEffect(() => {
-    let result = searchMovies(searchQuery, {
-      genre: activeGenre !== 'all' ? activeGenre : undefined
-    });
+    let result = movies;
+
+    if (searchQuery) {
+      const lowerQuery = searchQuery.toLowerCase();
+      result = result.filter(movie =>
+        movie.title.toLowerCase().includes(lowerQuery) ||
+        movie.director.toLowerCase().includes(lowerQuery) ||
+        movie.description.toLowerCase().includes(lowerQuery) ||
+        movie.actors.some(actor => actor.toLowerCase().includes(lowerQuery))
+      );
+    }
+
+    if (activeGenre !== 'all') {
+      result = result.filter(movie => movie.genre === activeGenre);
+    }
 
     setFilteredMovies(result);
-  }, [searchQuery, activeGenre, searchMovies]);
+  }, [searchQuery, activeGenre, movies]);
 
   const handleGenreChange = (genre: string) => {
     setActiveGenre(genre);
@@ -49,6 +61,14 @@ export const MovieList = () => {
       return params;
     });
   };
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-xl font-medium">Loading movies...</div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gray-50 pt-24 pb-20">
@@ -190,6 +210,3 @@ const MovieListItem = ({ movie, index }: { movie: Movie; index: number }) => {
     </div>
   );
 };
-
-
-
