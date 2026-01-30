@@ -3,6 +3,7 @@ import anime from 'animejs';
 import { CinemaHero } from '../components/ui/CinemaHero';
 import { FeaturedCarousel } from '../components/ui/FeaturedCarousel';
 import { useMovies } from '../context/MovieContext';
+import MusicPlayer from '../components/ui/MusicPlayer';
 
 export const Home = () => {
   const { getFeaturedMovies } = useMovies();
@@ -24,13 +25,15 @@ export const Home = () => {
   }, []);
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-white relative">
       <CinemaHero />
 
       {/* Featured Movies Carousel */}
       <div ref={carouselRef} className="opacity-0 max-w-7xl mx-auto px-6 -mt-10 relative z-20 mb-20">
-        <FeaturedCarousel movies={featuredMovies} />
+        {/* <FeaturedCarousel movies={featuredMovies} /> */}
       </div>
+
+      <MusicPlayer />
     </div>
   );
 };
