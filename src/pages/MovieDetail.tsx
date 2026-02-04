@@ -56,6 +56,7 @@ export const MovieDetail = () => {
       </div>
     );
   }
+  console.log(movie)
 
   return (
     <div className="min-h-screen bg-gray-50 pt-24 pb-20">
@@ -63,7 +64,7 @@ export const MovieDetail = () => {
       <div className="max-w-7xl mx-auto px-6 mb-8">
         <button
           onClick={() => navigate(-1)}
-          className="flex items-center space-x-2 text-gray-600 hover:text-black transition-colors group"
+          className="flex items-center space-x-2 hover:cursor-pointer text-gray-600 hover:text-black transition-colors group"
         >
           <ArrowLeft className="w-5 h-5 group-hover:-translate-x-1 transition-transform" />
           <span>返回电影列表</span>
@@ -99,7 +100,7 @@ export const MovieDetail = () => {
                     <span className="w-1 h-1 bg-gray-300 rounded-full"></span>
                     <div className="flex items-center space-x-1">
                       <Film className="w-4 h-4" />
-                      <span className="capitalize">{movie.genre}</span>
+                      <span className="capitalize">{movie.genre.join('·')}</span>
                     </div>
                     <span className="w-1 h-1 bg-gray-300 rounded-full"></span>
                     <div className="flex items-center space-x-1 text-yellow-500 font-bold">
@@ -151,23 +152,7 @@ export const MovieDetail = () => {
                     </div>
                   )}
 
-                  <div className="grid grid-cols-2 md:grid-cols-4 gap-6 pt-6 border-t border-gray-100">
-                    <div>
-                      <h4 className="text-sm font-medium text-gray-500 mb-1">上映年份</h4>
-                      <p className="font-semibold text-gray-900">{movie.year}</p>
-                    </div>
-                    <div>
-                      <h4 className="text-sm font-medium text-gray-500 mb-1">类型</h4>
-                      <p className="font-semibold text-gray-900 capitalize">{movie.genre}</p>
-                    </div>
-                    <div>
-                      <h4 className="text-sm font-medium text-gray-500 mb-1">评分</h4>
-                      <div className="flex items-center space-x-1 text-yellow-500">
-                        <Star className="w-4 h-4 fill-current" />
-                        <span className="font-semibold text-gray-900">{movie.rating}/10</span>
-                      </div>
-                    </div>
-                  </div>
+
                 </div>
               </div>
             </div>

@@ -4,7 +4,7 @@ export interface Movie {
   poster: string //海报
   year: number //年份
   rating: number //评分
-  genre: string //类型
+  genre: string[] //类型
   director: string //导演
   description: string //描述
   actors: string[] //演员

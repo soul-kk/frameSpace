@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import { useSearchParams } from 'react-router';
+import { useSearchParams, useNavigate } from 'react-router';
 import { Search, LayoutGrid, List as ListIcon, Filter } from 'lucide-react';
 import anime from 'animejs';
 import { useMovies } from '../context/MovieContext';
@@ -47,7 +47,7 @@ export const MovieList = () => {
     }
 
     if (activeGenre !== 'all') {
-      result = result.filter(movie => movie.genre === activeGenre);
+      result = result.filter(movie => movie.genre.includes(activeGenre));
     }
 
     setFilteredMovies(result);
@@ -92,7 +92,7 @@ export const MovieList = () => {
                   key={genre.id}
                   onClick={() => handleGenreChange(genre.id)}
                   className={cn(
-                    "px-4 py-2 rounded-full text-sm font-medium transition-all duration-300 border-2",
+                    "px-4 py-2 rounded-full text-sm font-medium transition-all duration-300 border-2 hover:cursor-pointer",
                     activeGenre === genre.id
                       ? "bg-black text-white border-black"
                       : "bg-transparent text-gray-600 border-gray-200 hover:border-black hover:text-black"
@@ -172,8 +172,11 @@ export const MovieList = () => {
 
 const MovieListItem = ({ movie, index }: { movie: Movie; index: number }) => {
   // Use anime for entrance
+  const navigate = useNavigate();
   return (
-    <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-4 flex flex-col sm:flex-row gap-6 hover:shadow-md transition-all duration-300">
+    <div
+      onClick={() => navigate(`/detail/${movie.id}`)}
+      className="bg-white rounded-xl shadow-sm border border-gray-100 p-4 flex flex-col sm:flex-row gap-6 hover:shadow-md transition-all duration-300 hover:cursor-pointer">
       <div className="w-full sm:w-48 h-64 sm:h-auto shrink-0">
         <img
           src={movie.poster}
@@ -193,7 +196,7 @@ const MovieListItem = ({ movie, index }: { movie: Movie; index: number }) => {
           <div className="flex items-center space-x-3 text-sm text-gray-500 mb-4">
             <span>{movie.year}</span>
             <span className="w-1 h-1 bg-gray-300 rounded-full"></span>
-            <span className="capitalize">{movie.genre}</span>
+            <span className="capitalize">{movie.genre.join('·')}</span>
             <span className="w-1 h-1 bg-gray-300 rounded-full"></span>
             <span>{movie.duration ? `${Math.floor(movie.duration / 60)}h ${movie.duration % 60}m` : 'N/A'}</span>
           </div>
