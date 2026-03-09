@@ -27,6 +27,7 @@ export const MovieProvider: React.FC<{ children: ReactNode }> = ({ children }) =
           rating: item.rate,      // Map rate to rating
         }));
         setMovies(mappedMovies);
+        console.log('movie:::::', mappedMovies);
       } catch (err) {
         console.error('Failed to fetch movies:', err);
         setError(err instanceof Error ? err : new Error('Unknown error'));

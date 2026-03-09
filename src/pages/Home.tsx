@@ -3,7 +3,7 @@ import anime from 'animejs';
 import { CinemaHero } from '../components/ui/CinemaHero';
 import { FeaturedCarousel } from '../components/ui/FeaturedCarousel';
 import { useMovies } from '../context/MovieContext';
-import MusicPlayer from '../components/ui/MusicPlayer';
+
 
 export const Home = () => {
   const { movies, loading } = useMovies();
@@ -34,7 +34,7 @@ export const Home = () => {
         {!loading && <FeaturedCarousel movies={featuredMovies} />}
       </div>
 
-      <MusicPlayer />
+
     </div>
   );
 };

@@ -133,7 +133,7 @@ export const CinemaHero = () => {
             <Link
 
               to="/list"
-              className="border-2 border-black text-black px-8 py-3 rounded-full font-medium hover:bg-black hover:text-white transition-all duration-300"
+              className="border-2 border-black text-black px-8 py-3 rounded-full font-medium hover:bg-gray-800 hover:text-white transition-all duration-300"
             >
               电影列表
             </Link>

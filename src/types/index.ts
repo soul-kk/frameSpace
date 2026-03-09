@@ -11,6 +11,7 @@ export interface Movie {
   duration: number //时长
   comment?: string // 评论
   created_at?: string // 创建时间
+  watchUrl?: string // 观影链接
 }
 
 export interface MovieFilters {

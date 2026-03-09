@@ -1,9 +1,10 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useParams, useNavigate, Link } from 'react-router';
-import { ArrowLeft, Star, Clock, Calendar, Film, Hash } from 'lucide-react';
+import { ArrowLeft, Star, Clock, Calendar, Film, Hash, Copy, Check } from 'lucide-react';
 import anime from 'animejs';
 
 import { useMovies } from '../context/MovieContext';
+import { cn } from '../lib/utils';
 
 export const MovieDetail = () => {
   const { id } = useParams<{ id: string }>();
@@ -15,6 +16,7 @@ export const MovieDetail = () => {
 
   const posterRef = useRef<HTMLDivElement>(null);
   const infoRef = useRef<HTMLDivElement>(null);
+  const [copied, setCopied] = useState(false);
 
   useEffect(() => {
     // Animation
@@ -37,6 +39,18 @@ export const MovieDetail = () => {
       });
     }
   }, [id, movie]); // Run animation when id or movie changes (e.g. after loading)
+
+  const handleCopyWatchUrl = async () => {
+    if (movie?.watchUrl) {
+      try {
+        await navigator.clipboard.writeText(movie.watchUrl);
+        setCopied(true);
+        setTimeout(() => setCopied(false), 2000);
+      } catch (err) {
+        console.error('复制失败:', err);
+      }
+    }
+  };
 
   if (loading) {
     return (
@@ -73,10 +87,13 @@ export const MovieDetail = () => {
 
       {/* Main Content */}
       <section className="mb-20">
+        <div>
+          {/* <iframe src="//player.bilibili.com/player.html?isOutside=true&aid=200291359&bvid=BV18z411B7mb&cid=178612454&p=1" scrolling="no" border="0" frameborder="no" framespacing="0" allowfullscreen="true"></iframe> */}
+        </div>
         <div className="max-w-7xl mx-auto px-6">
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
             {/* Poster */}
-            <div className="lg:col-span-1">
+            <div className="lg:col-span-1 flex flex-col items-center  gap-6">
               <div ref={posterRef} className="bg-white rounded-2xl shadow-xl overflow-hidden opacity-0">
                 <img
                   src={movie.poster}
@@ -84,6 +101,33 @@ export const MovieDetail = () => {
                   className="w-full h-auto object-cover hover:scale-105 transition-transform duration-500"
                 />
               </div>
+
+              {/* Copy Watch URL Button */}
+              {movie.watchUrl && (
+                <button
+                  onClick={handleCopyWatchUrl}
+                  disabled={copied}
+                  className={cn(
+                    "w-full bg-black hover:bg-gray-800 text-white font-medium py-4 px-6 rounded-xl",
+                    "shadow-lg hover:shadow-xl transition-all duration-300",
+                    "flex items-center justify-center space-x-2 group",
+                    "disabled:bg-green-600 disabled:cursor-default",
+                    !copied && "cursor-pointer"
+                  )}
+                >
+                  {copied ? (
+                    <>
+                      <Check className="w-5 h-5" />
+                      <span>已复制到剪切板📋</span>
+                    </>
+                  ) : (
+                    <>
+                      <Copy className="w-5 h-5 group-hover:scale-110 transition-transform" />
+                      <span>磁力下载链接</span>
+                    </>
+                  )}
+                </button>
+              )}
             </div>
 
             {/* Info */}
