@@ -10,7 +10,7 @@ export const Footer = () => {
           </div>
           <span className="text-xl font-bold">光影帧格</span>
         </div>
-        <p className="text-sm text-gray-500 mb-4">© 2025 记录我最喜爱的电影与摄影，怀着对电影与摄影的热情精心制作。</p>
+        <p className="text-sm text-gray-500 mb-4">© 2026 记录我最喜爱的电影与摄影，怀着对电影与摄影的热情精心制作。</p>
       </div>
     </footer>
   );

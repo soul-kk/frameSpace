@@ -4,6 +4,7 @@ import anime from 'animejs';
 import { useEffect } from 'react';
 import { getGalleryImages } from '../services/api';
 import { NoPhoto } from '../components/ui/NoPhoto';
+import { GalleryItem } from '../components/ui/GalleryItem';
 
 export const Gallery = () => {
   const galleryRef = useRef<HTMLDivElement>(null);
@@ -35,7 +36,27 @@ export const Gallery = () => {
       });
   }, [loading]);
 
-  if (loading) return (
+  if (loading) return <LoadingFramework />;
+
+  return <div ref={galleryRef} className='max-w-full px-8 pt-24 pb-12 opacity-0'>
+    {imageList.length === 0 ? <NoPhoto /> : (
+      <Masonry
+        columns={5}
+        gutter={16}
+        items={imageList.map((img, index) => ({
+          key: `item-${index}`,
+          data: img,
+        }))}
+        itemRender={({ data }) => (
+          <GalleryItem data={data} />
+        )}
+      />
+    )}
+  </div>
+};
+
+const LoadingFramework = () => {
+  return (
     <div className='max-w-full px-8 pt-24 pb-12'>
       <div style={{ columns: 5, columnGap: '16px' }}>
         {[280, 180, 340, 220, 300, 160, 260, 320, 200, 240, 190, 310, 170, 290, 350].map((h, i) => (
@@ -62,21 +83,5 @@ export const Gallery = () => {
         }
       `}</style>
     </div>
-  );
-
-  return <div ref={galleryRef} className='max-w-full px-8 pt-24 pb-12 opacity-0'>
-    {imageList.length === 0 ? <NoPhoto /> : (
-      <Masonry
-        columns={5}
-        gutter={16}
-        items={imageList.map((img, index) => ({
-          key: `item-${index}`,
-          data: img,
-        }))}
-        itemRender={({ data }) => (
-          <img src={data} alt={`${decodeURIComponent(data.split('photograph/')[1].split('.JPG')[0])}`} style={{ width: '100%', borderRadius: '10px' }} />
-        )}
-      />
-    )}
-  </div>
-};
+  )
+}
