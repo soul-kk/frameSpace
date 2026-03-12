@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { Movie } from '../types';
-import { getMovies } from '../services/movies';
+import { getMovies } from '../services/api';
 
 interface MovieContextType {
   movies: Movie[];

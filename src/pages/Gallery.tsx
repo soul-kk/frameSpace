@@ -2,7 +2,7 @@ import React, { useRef, useState } from 'react';
 import { Masonry } from 'antd';
 import anime from 'animejs';
 import { useEffect } from 'react';
-import { getGalleryImages } from '../services/gallery';
+import { getGalleryImages } from '../services/api';
 import { NoPhoto } from '../components/ui/NoPhoto';
 
 export const Gallery = () => {
@@ -35,7 +35,34 @@ export const Gallery = () => {
       });
   }, [loading]);
 
-  if (loading) return null;
+  if (loading) return (
+    <div className='max-w-full px-8 pt-24 pb-12'>
+      <div style={{ columns: 5, columnGap: '16px' }}>
+        {[280, 180, 340, 220, 300, 160, 260, 320, 200, 240, 190, 310, 170, 290, 350].map((h, i) => (
+          <div
+            key={i}
+            className='animate-pulse'
+            style={{
+              height: h,
+              borderRadius: '10px',
+              marginBottom: '16px',
+              breakInside: 'avoid',
+              background: 'linear-gradient(110deg, #1a1a1a 30%, #2a2a2a 50%, #1a1a1a 70%)',
+              backgroundSize: '200% 100%',
+              animation: `shimmer 1.6s ease-in-out infinite`,
+              animationDelay: `${i * 0.08}s`,
+            }}
+          />
+        ))}
+      </div>
+      <style>{`
+        @keyframes shimmer {
+          0% { background-position: 200% 0; }
+          100% { background-position: -200% 0; }
+        }
+      `}</style>
+    </div>
+  );
 
   return <div ref={galleryRef} className='max-w-full px-8 pt-24 pb-12 opacity-0'>
     {imageList.length === 0 ? <NoPhoto /> : (
