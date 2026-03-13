@@ -7,7 +7,9 @@ export const getMovies = async () => {
 }
 
 export const getGalleryImages = async () => {
-  const { data, error } = await supabase.storage.from('photograph').list()
+  const { data, error } = await supabase.storage
+    .from('photograph')
+    .list(undefined, { sortBy: { column: 'created_at', order: 'desc' } })
   if (error) throw error
   return data.map(
     file =>
