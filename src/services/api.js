@@ -11,8 +11,17 @@ export const getGalleryImages = async () => {
     .from('photograph')
     .list(undefined, { sortBy: { column: 'created_at', order: 'desc' } })
   if (error) throw error
-  return data.map(
-    file =>
-      supabase.storage.from('photograph').getPublicUrl(file.name).data.publicUrl
-  )
+
+  const files = data.filter(f => !f.name.toLowerCase().endsWith('.mov'))
+
+  return files.map(file => {
+    const url = supabase.storage.from('photograph').getPublicUrl(file.name)
+      .data.publicUrl
+    const isLivePhoto = file.name.toLowerCase().endsWith('.heic')
+    const movName = file.name.replace(/\.heic$/i, '.MOV')
+    const videoUrl = isLivePhoto
+      ? supabase.storage.from('photograph').getPublicUrl(movName).data.publicUrl
+      : undefined
+    return { url, isLivePhoto, videoUrl }
+  })
 }

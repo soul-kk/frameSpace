@@ -5,6 +5,7 @@ import { MovieList } from './pages/MovieList'
 import { MovieDetail } from './pages/MovieDetail'
 import { UploadPage } from './pages/Upload'
 import { Gallery } from './pages/Gallery'
+import Test from './pages/Test.tsx'
 
 const routes = createBrowserRouter([
   {
@@ -17,6 +18,10 @@ const routes = createBrowserRouter([
       {
         path: '/list',
         element: <MovieList />,
+      },
+      {
+        path: '/test',
+        element: <Test />,
       },
       {
         path: '/detail/:id',
