@@ -1,7 +1,6 @@
 import React, { useEffect, useRef, useCallback } from 'react'
 import * as LivePhotosKitNS from 'livephotoskit'
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const LivePhotosKit: typeof LivePhotosKitNS =
   (LivePhotosKitNS as any).default ?? LivePhotosKitNS
 
@@ -17,7 +16,6 @@ export const LivePhotoPlayer = ({
   style,
 }: LivePhotoPlayerProps) => {
   const containerRef = useRef<HTMLDivElement>(null)
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const playerRef = useRef<any>(null)
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
 
@@ -26,7 +24,7 @@ export const LivePhotoPlayer = ({
     const player = LivePhotosKit.Player(containerRef.current)
     player.photoSrc = photoUrl
     player.videoSrc = videoUrl
-    player.showsNativeControls = true
+    player.showsNativeControls = true //显示一个icon控件
     player.playbackStyle = LivePhotosKit.PlaybackStyle.FULL
     playerRef.current = player
   }, [])
