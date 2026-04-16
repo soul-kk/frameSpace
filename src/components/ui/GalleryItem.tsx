@@ -101,7 +101,7 @@ export const GalleryItem = ({ data }: { data: GalleryImage }) => {
     if (open && overlayRef.current) {
       anime({
         targets: overlayRef.current,
-        opacity: [0.3, 1],
+        opacity: [0, 1],
         duration: 200,
         easing: 'easeOutExpo',
       })
@@ -139,9 +139,17 @@ export const GalleryItem = ({ data }: { data: GalleryImage }) => {
                 background: 'rgba(0,0,0,0.85)',
                 backdropFilter: 'blur(8px)',
                 opacity: 0,
+                pointerEvents: 'auto',
               }}
               onClick={() => setOpen(false)}
             >
+              <button
+                className="absolute top-4 right-4 text-white text-3xl leading-none z-10"
+                onClick={() => setOpen(false)}
+                aria-label="关闭"
+              >
+                ×
+              </button>
               <img
                 ref={imgRef}
                 src={data.url}
@@ -197,9 +205,17 @@ export const GalleryItem = ({ data }: { data: GalleryImage }) => {
               background: 'rgba(0,0,0,0.85)',
               backdropFilter: 'blur(8px)',
               opacity: 0,
+              pointerEvents: 'auto',
             }}
             onClick={() => setOpen(false)}
           >
+            <button
+              className="absolute top-4 right-4 text-white text-3xl leading-none z-10"
+              onClick={() => setOpen(false)}
+              aria-label="关闭"
+            >
+              ×
+            </button>
             <div
               onClick={e => e.stopPropagation()}
               style={{

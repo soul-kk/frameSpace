@@ -47,7 +47,7 @@ export const Gallery = () => {
         <NoPhoto />
       ) : (
         <Masonry
-          columns={5}
+          columns={{ xs: 2, sm: 3, md: 4, lg: 5 }}
           gutter={16}
           items={imageList.map((img, index) => ({
             key: `item-${index}`,
@@ -64,7 +64,7 @@ export const Gallery = () => {
 const LoadingFramework = () => {
   return (
     <div className="max-w-full px-8 pt-24 pb-12">
-      <div style={{ columns: 5, columnGap: '16px' }}>
+      <div className="columns-2 sm:columns-3 md:columns-4 lg:columns-5 gap-4">
         {[
           280, 180, 340, 220, 300, 160, 260, 320, 200, 240, 190, 310, 170, 290,
           350,

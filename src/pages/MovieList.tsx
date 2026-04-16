@@ -73,29 +73,29 @@ export const MovieList = () => {
   return (
     <div className="min-h-screen bg-gray-50 pt-24 pb-20">
       {/* Header */}
-      <div className="max-w-7xl mx-auto px-6 mb-12 text-center">
-        <h1 className="text-5xl font-bold text-black mb-4 font-serif">电影收藏</h1>
-        <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+      <div className="mx-auto mb-6 max-w-7xl px-4 text-center sm:mb-12 sm:px-6">
+        <h1 className="mb-4 font-serif text-3xl font-bold text-black sm:text-5xl">电影收藏</h1>
+        <p className="mx-auto max-w-2xl text-base text-gray-600 sm:text-xl">
           我最爱的电影
         </p>
       </div>
 
       {/* Controls */}
-      <div className="max-w-7xl mx-auto px-6 mb-8">
-        <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
-          <div className="flex flex-col lg:flex-row gap-6 justify-between items-center">
+      <div className="mx-auto mb-4 max-w-7xl px-4 sm:mb-8 sm:px-6">
+        <div className="rounded-2xl border border-gray-100 bg-white p-3 shadow-sm sm:p-6">
+          <div className="flex flex-col gap-3 sm:gap-6 lg:flex-row lg:items-center lg:justify-between">
 
             {/* Filter Tabs */}
-            <div className="flex flex-wrap justify-center gap-2">
+            <div className="flex flex-wrap justify-center gap-1.5 sm:gap-2">
               {genres.map(genre => (
                 <button
                   key={genre.id}
                   onClick={() => handleGenreChange(genre.id)}
                   className={cn(
-                    "px-4 py-2 rounded-full text-sm font-medium transition-all duration-300 border-2 hover:cursor-pointer",
+                    "rounded-full border-2 px-3 py-1 text-xs font-medium transition-all duration-300 hover:cursor-pointer sm:px-4 sm:py-2 sm:text-sm",
                     activeGenre === genre.id
-                      ? "bg-black text-white border-black"
-                      : "bg-transparent text-gray-600 border-gray-200 hover:border-black hover:text-black"
+                      ? "border-black bg-black text-white"
+                      : "border-gray-200 bg-transparent text-gray-600 hover:border-black hover:text-black"
                   )}
                 >
                   {genre.label}
@@ -103,7 +103,7 @@ export const MovieList = () => {
               ))}
             </div>
 
-            <div className="flex flex-col sm:flex-row gap-4 w-full lg:w-auto">
+            <div className="flex flex-row gap-2 sm:gap-4 lg:w-auto">
               {/* Search */}
               <div className="relative flex-1 sm:min-w-[300px]">
                 <input
@@ -111,30 +111,30 @@ export const MovieList = () => {
                   placeholder="搜索电影..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full pl-10 pr-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-black/5 focus:border-black transition-all outline-none"
+                  className="w-full rounded-xl border border-gray-200 bg-gray-50 py-2 pr-4 pl-10 outline-none transition-all focus:border-black focus:ring-2 focus:ring-black/5"
                 />
-                <Search className="w-5 h-5 text-gray-400 absolute left-3 top-1/2 -translate-y-1/2" />
+                <Search className="absolute top-1/2 left-3 h-5 w-5 -translate-y-1/2 text-gray-400" />
               </div>
 
               {/* View Toggle */}
-              <div className="flex items-center bg-gray-50 rounded-xl p-1 border border-gray-200">
+              <div className="flex items-center rounded-xl border border-gray-200 bg-gray-50 p-1">
                 <button
                   onClick={() => setView('grid')}
                   className={cn(
-                    "p-2 rounded-lg transition-all",
-                    view === 'grid' ? "bg-white shadow-sm text-black" : "text-gray-400 hover:text-gray-600"
+                    "rounded-lg p-2 transition-all",
+                    view === 'grid' ? "bg-white text-black shadow-sm" : "text-gray-400 hover:text-gray-600"
                   )}
                 >
-                  <LayoutGrid className="w-5 h-5" />
+                  <LayoutGrid className="h-5 w-5" />
                 </button>
                 <button
                   onClick={() => setView('list')}
                   className={cn(
-                    "p-2 rounded-lg transition-all",
-                    view === 'list' ? "bg-white shadow-sm text-black" : "text-gray-400 hover:text-gray-600"
+                    "rounded-lg p-2 transition-all",
+                    view === 'list' ? "bg-white text-black shadow-sm" : "text-gray-400 hover:text-gray-600"
                   )}
                 >
-                  <ListIcon className="w-5 h-5" />
+                  <ListIcon className="h-5 w-5" />
                 </button>
               </div>
             </div>
@@ -143,7 +143,7 @@ export const MovieList = () => {
       </div>
 
       {/* Content */}
-      <div className="max-w-7xl mx-auto px-6">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6">
         {filteredMovies.length === 0 ? (
           <div className="text-center py-20">
             <div className="text-6xl mb-4">🎬</div>
@@ -152,7 +152,7 @@ export const MovieList = () => {
           </div>
         ) : (
           view === 'grid' ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+            <div className="grid grid-cols-2 gap-4 sm:gap-8 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
               {filteredMovies.map((movie, index) => (
                 <MovieCard key={movie.id} movie={movie} index={index} />
               ))}

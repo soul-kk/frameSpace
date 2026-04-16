@@ -25,37 +25,36 @@ export const MovieCard: React.FC<MovieCardProps> = ({ movie, index = 0 }) => {
   }, [index]);
 
   return (
-    <div
-      ref={cardRef}
-      className="group bg-white rounded-lg overflow-hidden shadow-lg cursor-pointer transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl border border-gray-100 hover:border-black opacity-0"
-    >
-      <div className="relative">
-        <img
-          src={movie.poster}
-          alt={movie.title}
-          className="w-full h-80 object-cover"
-          loading="lazy"
-        />
-        <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-          <Link
-            to={`/detail/${movie.id}`}
-            className="bg-white text-black px-6 py-2 rounded-full font-medium hover:bg-gray-200 transition-colors"
-          >
-            查看详情
-          </Link>
+    <Link to={`/detail/${movie.id}`} className="block">
+      <div
+        ref={cardRef}
+        className="group cursor-pointer overflow-hidden rounded-lg border border-gray-100 bg-white opacity-0 shadow-lg transition-all duration-300 hover:-translate-y-2 hover:border-black hover:shadow-2xl"
+      >
+        <div className="relative">
+          <img
+            src={movie.poster}
+            alt={movie.title}
+            className="h-44 w-full object-cover sm:h-80"
+            loading="lazy"
+          />
+          <div className="absolute inset-0 flex items-center justify-center bg-black/60 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+            <span className="rounded-full bg-white px-6 py-2 font-medium text-black transition-colors hover:bg-gray-200">
+              查看详情
+            </span>
+          </div>
         </div>
-      </div>
-      <div className="p-6">
-        <h3 className="text-xl font-bold text-black mb-2 truncate" title={movie.title}>{movie.title}</h3>
-        <div className="flex items-center justify-between text-gray-600">
-          <span>{movie.year}</span>
-          <div className="flex items-center space-x-1">
-            <span className="text-yellow-500">★</span>
-            <span>{movie.rating.toFixed(1)}</span>
+        <div className="p-3 sm:p-6">
+          <h3 className="mb-2 truncate text-sm font-bold text-black sm:text-xl" title={movie.title}>{movie.title}</h3>
+          <div className="flex items-center justify-between text-gray-600">
+            <span className="text-xs sm:text-base">{movie.year}</span>
+            <div className="flex items-center space-x-1">
+              <span className="text-yellow-500">★</span>
+              <span className="text-xs sm:text-base">{movie.rating.toFixed(1)}</span>
+            </div>
           </div>
         </div>
       </div>
-    </div>
+    </Link>
   );
 };
 
