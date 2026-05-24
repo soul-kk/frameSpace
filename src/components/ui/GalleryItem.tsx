@@ -127,6 +127,7 @@ export const GalleryItem = ({ data }: { data: GalleryImage }) => {
           <img
             src={data.url}
             alt={alt}
+            loading="lazy"
             style={{ width: '100%', borderRadius: '8px' }}
           />
         </div>

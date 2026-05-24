@@ -12,26 +12,39 @@ export type GalleryImage = {
   videoUrl?: string
 }
 
+const PAGE_SIZE = 15
+
 export const Gallery = () => {
   const galleryRef = useRef<HTMLDivElement>(null)
-  const [imageList, setImageList] = useState<GalleryImage[]>([])
+  const sentinelRef = useRef<HTMLDivElement>(null)
+  const [allImages, setAllImages] = useState<GalleryImage[]>([])
+  const [visibleCount, setVisibleCount] = useState(PAGE_SIZE)
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
     getGalleryImages().then(imgs => {
-      setImageList(imgs)
+      setAllImages(imgs)
       setLoading(false)
     })
   }, [])
 
   useEffect(() => {
     if (loading) return
-    const timeline = anime.timeline({
-      easing: 'easeOutExpo',
-      duration: 1000,
-    })
+    const observer = new IntersectionObserver(
+      entries => {
+        if (entries[0].isIntersecting) {
+          setVisibleCount(c => Math.min(c + PAGE_SIZE, allImages.length))
+        }
+      },
+      { threshold: 0.1 }
+    )
+    if (sentinelRef.current) observer.observe(sentinelRef.current)
+    return () => observer.disconnect()
+  }, [loading, allImages.length])
 
-    timeline.add({
+  useEffect(() => {
+    if (loading) return
+    anime.timeline({ easing: 'easeOutExpo', duration: 1000 }).add({
       targets: galleryRef.current,
       opacity: [0, 1],
       translateY: [30, 0],
@@ -39,22 +52,29 @@ export const Gallery = () => {
     })
   }, [loading])
 
+  const visibleImages = allImages.slice(0, visibleCount)
+
   if (loading) return <LoadingFramework />
 
   return (
     <div ref={galleryRef} className="max-w-full px-8 pt-24 pb-12 opacity-0">
-      {imageList.length === 0 ? (
+      {allImages.length === 0 ? (
         <NoPhoto />
       ) : (
-        <Masonry
-          columns={{ xs: 2, sm: 3, md: 4, lg: 5 }}
-          gutter={16}
-          items={imageList.map((img, index) => ({
-            key: `item-${index}`,
-            data: img,
-          }))}
-          itemRender={({ data }) => <GalleryItem data={data} />}
-        />
+        <>
+          <Masonry
+            columns={{ xs: 2, sm: 3, md: 4, lg: 5 }}
+            gutter={16}
+            items={visibleImages.map((img, index) => ({
+              key: `item-${index}`,
+              data: img,
+            }))}
+            itemRender={({ data }) => <GalleryItem data={data} />}
+          />
+          {visibleCount < allImages.length && (
+            <div ref={sentinelRef} className="h-16" />
+          )}
+        </>
       )}
     </div>
   )
@@ -64,7 +84,7 @@ export const Gallery = () => {
 const LoadingFramework = () => {
   return (
     <div className="max-w-full px-8 pt-24 pb-12">
-      <div className="columns-2 sm:columns-3 md:columns-4 lg:columns-5 gap-4">
+      <div className="columns-2 gap-4 sm:columns-3 md:columns-4 lg:columns-5">
         {[
           280, 180, 340, 220, 300, 160, 260, 320, 200, 240, 190, 310, 170, 290,
           350,
