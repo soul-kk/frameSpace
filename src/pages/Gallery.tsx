@@ -12,11 +12,10 @@ export type GalleryImage = {
   videoUrl?: string
 }
 
-const PAGE_SIZE = 15
+const PAGE_SIZE = 10
 
 export const Gallery = () => {
   const galleryRef = useRef<HTMLDivElement>(null)
-  const sentinelRef = useRef<HTMLDivElement>(null)
   const [allImages, setAllImages] = useState<GalleryImage[]>([])
   const [visibleCount, setVisibleCount] = useState(PAGE_SIZE)
   const [loading, setLoading] = useState(true)
@@ -28,19 +27,9 @@ export const Gallery = () => {
     })
   }, [])
 
-  useEffect(() => {
-    if (loading) return
-    const observer = new IntersectionObserver(
-      entries => {
-        if (entries[0].isIntersecting) {
-          setVisibleCount(c => Math.min(c + PAGE_SIZE, allImages.length))
-        }
-      },
-      { threshold: 0.1 }
-    )
-    if (sentinelRef.current) observer.observe(sentinelRef.current)
-    return () => observer.disconnect()
-  }, [loading, allImages.length])
+  const loadMore = () => {
+    setVisibleCount(c => Math.min(c + PAGE_SIZE, allImages.length))
+  }
 
   useEffect(() => {
     if (loading) return
@@ -72,11 +61,20 @@ export const Gallery = () => {
             itemRender={({ data }) => <GalleryItem data={data} />}
           />
           {visibleCount < allImages.length && (
-            <div ref={sentinelRef} className="h-16" />
+            <button
+              onClick={loadMore}
+              className="mx-auto mt-10 block cursor-pointer rounded-full border border-neutral-700 px-6 py-2 text-sm transition-colors hover:border-neutral-500 active:scale-110"
+              style={{
+                transition:
+                  'transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), color 0.2s, border-color 0.2s',
+              }}
+            >
+              加载更多
+            </button>
           )}
           {visibleCount === allImages.length && allImages.length > 0 && (
             <p className="mt-14 text-center text-base font-medium text-neutral-500">
-              到底啦😁
+              没有更多啦😁
             </p>
           )}
         </>
