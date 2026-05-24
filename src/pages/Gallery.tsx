@@ -57,7 +57,7 @@ export const Gallery = () => {
   if (loading) return <LoadingFramework />
 
   return (
-    <div ref={galleryRef} className="max-w-full px-8 pt-24 pb-12 opacity-0">
+    <div ref={galleryRef} className="max-w-full px-8 pt-24 pb-10 opacity-0">
       {allImages.length === 0 ? (
         <NoPhoto />
       ) : (
@@ -73,6 +73,11 @@ export const Gallery = () => {
           />
           {visibleCount < allImages.length && (
             <div ref={sentinelRef} className="h-16" />
+          )}
+          {visibleCount === allImages.length && allImages.length > 0 && (
+            <p className="mt-14 text-center text-base font-medium text-neutral-500">
+              到底啦😁
+            </p>
           )}
         </>
       )}
