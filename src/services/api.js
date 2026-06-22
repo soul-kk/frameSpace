@@ -1,7 +1,10 @@
 import supabase from './supabase'
 
 export const getMovies = async () => {
-  const { data, error } = await supabase.from('movies_kk').select('*')
+  const { data, error } = await supabase
+    .from('movies_kk')
+    .select('*')
+    .order('created_at', { ascending: false })
   if (error) throw error
   return data
 }
