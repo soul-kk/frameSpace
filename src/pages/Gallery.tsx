@@ -19,6 +19,8 @@ export const Gallery = () => {
   const [allImages, setAllImages] = useState<GalleryImage[]>([])
   const [visibleCount, setVisibleCount] = useState(PAGE_SIZE)
   const [loading, setLoading] = useState(true)
+  const [isThrottled, setIsThrottled] = useState(false)
+  const throttleTimer = useRef<ReturnType<typeof setTimeout>>()
 
   useEffect(() => {
     getGalleryImages().then(imgs => {
@@ -28,8 +30,16 @@ export const Gallery = () => {
   }, [])
 
   const loadMore = () => {
+    if (isThrottled) return
+    setIsThrottled(true)
     setVisibleCount(c => Math.min(c + PAGE_SIZE, allImages.length))
+    clearTimeout(throttleTimer.current)
+    throttleTimer.current = setTimeout(() => setIsThrottled(false), 2000)
   }
+
+  useEffect(() => {
+    return () => clearTimeout(throttleTimer.current)
+  }, [])
 
   useEffect(() => {
     if (loading) return
@@ -63,7 +73,8 @@ export const Gallery = () => {
           {visibleCount < allImages.length && (
             <button
               onClick={loadMore}
-              className="mx-auto mt-10 block cursor-pointer rounded-full border border-neutral-700 px-6 py-2 text-sm transition-colors hover:border-neutral-500 active:scale-110"
+              disabled={isThrottled}
+              className="mx-auto mt-10 flex cursor-pointer items-center gap-2 rounded-full border border-neutral-700 px-6 py-2 text-sm transition-colors hover:border-neutral-500 active:scale-110 disabled:cursor-not-allowed disabled:opacity-60 disabled:hover:border-neutral-700 disabled:active:scale-100"
               style={{
                 transition:
                   'transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), color 0.2s, border-color 0.2s',
