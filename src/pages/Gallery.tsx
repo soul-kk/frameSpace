@@ -12,7 +12,7 @@ export type GalleryImage = {
   videoUrl?: string
 }
 
-const PAGE_SIZE = 10
+const PAGE_SIZE = 15
 
 export const Gallery = () => {
   const galleryRef = useRef<HTMLDivElement>(null)
