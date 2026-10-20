@@ -1,9 +1,14 @@
-import React, { useState, useRef, useEffect } from 'react'
+import React, { lazy, Suspense, useState, useRef, useEffect } from 'react'
 import { createPortal } from 'react-dom'
 import anime from 'animejs'
-import libheif from 'libheif-js/wasm-bundle'
-import { LivePhotoPlayer } from './LivePhotoPlayer'
+import { scheduleHeicDecode } from '../../lib/heicDecodeQueue'
 import type { GalleryImage } from '../../pages/Gallery'
+
+const LivePhotoPlayer = lazy(() =>
+  import('./LivePhotoPlayer').then(({ LivePhotoPlayer }) => ({
+    default: LivePhotoPlayer,
+  }))
+)
 
 const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent)
 
@@ -11,7 +16,10 @@ export const GalleryItem = ({ data }: { data: GalleryImage }) => {
   const [open, setOpen] = useState(false)
   const overlayRef = useRef<HTMLDivElement>(null)
   const imgRef = useRef<HTMLImageElement>(null)
+  const previewRef = useRef<HTMLDivElement>(null)
   const blobUrlRef = useRef<string | null>(null)
+  const [isNearViewport, setIsNearViewport] = useState(false)
+  const [conversionError, setConversionError] = useState(false)
 
   const filename = data.url.split('photograph/')[1] ?? ''
   const alt = decodeURIComponent(filename.replace(/\.[^.]+$/, ''))
@@ -22,55 +30,79 @@ export const GalleryItem = ({ data }: { data: GalleryImage }) => {
   const [aspectRatio, setAspectRatio] = useState<string>('3/4')
 
   useEffect(() => {
-    if (!data.isLivePhoto) return
+    if (!data.isLivePhoto || !previewRef.current) return
+    if (!('IntersectionObserver' in window)) {
+      setIsNearViewport(true)
+      return
+    }
+    const observer = new IntersectionObserver(
+      entries => {
+        if (entries.some(entry => entry.isIntersecting)) {
+          setIsNearViewport(true)
+          observer.disconnect()
+        }
+      },
+      { rootMargin: '300px' }
+    )
+    observer.observe(previewRef.current)
+    return () => observer.disconnect()
+  }, [data.url, data.isLivePhoto])
+
+  useEffect(() => {
+    if (!data.isLivePhoto || !isNearViewport) return
 
     if (isSafari) {
       const img = new Image()
       img.onload = () =>
         setAspectRatio(`${img.naturalWidth}/${img.naturalHeight}`)
       img.src = data.url
-      return
+      return () => {
+        img.onload = null
+        img.src = ''
+      }
     }
 
-    let cancelled = false
+    const controller = new AbortController()
+    const { signal } = controller
+    setConversionError(false)
 
-    const convert = async () => {
-      const response = await fetch(data.url)
-      if (!response.ok) {
-        const errorText = await response.text()
-        throw new Error(`下载失败: ${response.status} - ${errorText}`)
+    scheduleHeicDecode(async () => {
+      const photoUrl = new URL(data.url)
+      const storageOrigin = new URL(import.meta.env.VITE_SUPABASE_URL).origin
+      if (
+        photoUrl.origin !== storageOrigin ||
+        !photoUrl.pathname.startsWith('/storage/v1/object/public/photograph/')
+      ) {
+        throw new Error('无效的照片地址')
       }
-
+      const response = await fetch(photoUrl, { signal })
+      if (!response.ok) throw new Error(`下载失败: ${response.status}`)
       const buffer = await response.arrayBuffer()
-      if (buffer.byteLength === 0) {
-        throw new Error(
-          '下载的文件内容无效，请检查 Supabase 权限或链接是否失效'
-        )
-      }
+      if (!buffer.byteLength) throw new Error('HEIC 文件为空')
+      if (signal.aborted) return
 
-      const decoder = new libheif.HeifDecoder()
-      const images = decoder.decode(new Uint8Array(buffer))
+      const { default: libheif } = await import('libheif-js/wasm-bundle')
+      if (signal.aborted) return
+      const images = new libheif.HeifDecoder().decode(new Uint8Array(buffer))
       if (!images.length) throw new Error('HEIC 解码失败：未找到图片数据')
 
       const image = images[0]
       const width = image.get_width()
       const height = image.get_height()
-
       const canvas = document.createElement('canvas')
       canvas.width = width
       canvas.height = height
-      const ctx = canvas.getContext('2d')!
+      const ctx = canvas.getContext('2d')
+      if (!ctx) throw new Error('无法创建 Canvas 上下文')
       const imageData = ctx.createImageData(width, height)
-
       await new Promise<void>((resolve, reject) => {
         image.display(imageData, (displayData: ImageData | null) => {
           if (!displayData) return reject(new Error('HEIF 渲染失败'))
           resolve()
         })
       })
-
+      if (signal.aborted) return
       ctx.putImageData(imageData, 0, 0)
-
       const blob = await new Promise<Blob>((resolve, reject) => {
         canvas.toBlob(
           b => (b ? resolve(b) : reject(new Error('Canvas 导出失败'))),
@@ -78,24 +110,25 @@ export const GalleryItem = ({ data }: { data: GalleryImage }) => {
           0.9
         )
       })
-
-      if (cancelled) return
+      if (signal.aborted) return
       const url = URL.createObjectURL(blob)
       blobUrlRef.current = url
       setAspectRatio(`${width}/${height}`)
       setPhotoSrc(url)
-    }
-
-    convert().catch(err => console.error('HEIC 转换失败:', err))
+    }, signal).catch(err => {
+      if (signal.aborted) return
+      console.error('HEIC 转换失败:', err)
+      setConversionError(true)
+    })
 
     return () => {
-      cancelled = true
+      controller.abort()
       if (blobUrlRef.current) {
         URL.revokeObjectURL(blobUrlRef.current)
         blobUrlRef.current = null
       }
     }
-  }, [data.url, data.isLivePhoto])
+  }, [data.url, data.isLivePhoto, isNearViewport])
 
   useEffect(() => {
     if (open && overlayRef.current) {
@@ -145,7 +178,7 @@ export const GalleryItem = ({ data }: { data: GalleryImage }) => {
               onClick={() => setOpen(false)}
             >
               <button
-                className="absolute top-4 right-4 text-white text-3xl leading-none z-10"
+                className="absolute top-4 right-4 z-10 text-3xl leading-none text-white"
                 onClick={() => setOpen(false)}
                 aria-label="关闭"
               >
@@ -169,20 +202,32 @@ export const GalleryItem = ({ data }: { data: GalleryImage }) => {
   return (
     <>
       <div
+        ref={previewRef}
         className="cursor-pointer rounded-lg border border-transparent transition-all duration-300 hover:-translate-y-0.5 hover:scale-101"
-        onClick={() => setOpen(true)}
+        onClick={() => {
+          if (photoSrc) setOpen(true)
+        }}
       >
-        {photoSrc ? (
-          <LivePhotoPlayer
-            photoUrl={photoSrc}
-            videoUrl={data.videoUrl!}
-            style={{
-              width: '100%',
-              aspectRatio,
-              borderRadius: '8px',
-              overflow: 'hidden',
-            }}
-          />
+        {photoSrc && isNearViewport ? (
+          <Suspense
+            fallback={
+              <div
+                className="animate-pulse bg-neutral-800"
+                style={{ aspectRatio }}
+              />
+            }
+          >
+            <LivePhotoPlayer
+              photoUrl={photoSrc}
+              videoUrl={data.videoUrl!}
+              style={{
+                width: '100%',
+                aspectRatio,
+                borderRadius: '8px',
+                overflow: 'hidden',
+              }}
+            />
+          </Suspense>
         ) : (
           <div
             className="animate-pulse"
@@ -194,7 +239,11 @@ export const GalleryItem = ({ data }: { data: GalleryImage }) => {
                 'linear-gradient(110deg, #1a1a1a 30%, #2a2a2a 50%, #1a1a1a 70%)',
               backgroundSize: '200% 100%',
             }}
-          />
+          >
+            {conversionError && (
+              <span className="text-white">照片加载失败</span>
+            )}
+          </div>
         )}
       </div>
       {open &&
@@ -211,7 +260,7 @@ export const GalleryItem = ({ data }: { data: GalleryImage }) => {
             onClick={() => setOpen(false)}
           >
             <button
-              className="absolute top-4 right-4 text-white text-3xl leading-none z-10"
+              className="absolute top-4 right-4 z-10 text-3xl leading-none text-white"
               onClick={() => setOpen(false)}
               aria-label="关闭"
             >
@@ -228,11 +277,17 @@ export const GalleryItem = ({ data }: { data: GalleryImage }) => {
               }}
             >
               {photoSrc && (
-                <LivePhotoPlayer
-                  photoUrl={photoSrc}
-                  videoUrl={data.videoUrl!}
-                  style={{ width: '100%', height: '100%' }}
-                />
+                <Suspense
+                  fallback={
+                    <div className="h-full w-full animate-pulse bg-neutral-800" />
+                  }
+                >
+                  <LivePhotoPlayer
+                    photoUrl={photoSrc}
+                    videoUrl={data.videoUrl!}
+                    style={{ width: '100%', height: '100%' }}
+                  />
+                </Suspense>
               )}
             </div>
           </div>,

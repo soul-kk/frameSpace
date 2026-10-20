@@ -27,7 +27,14 @@ export const LivePhotoPlayer = ({
     player.showsNativeControls = true //显示一个icon控件
     player.playbackStyle = LivePhotosKit.PlaybackStyle.FULL
     playerRef.current = player
-  }, [])
+    return () => {
+      if (timerRef.current) clearTimeout(timerRef.current)
+      player.stop()
+      player.photoSrc = ''
+      player.videoSrc = ''
+      playerRef.current = null
+    }
+  }, [photoUrl, videoUrl])
 
   const handlePointerDown = useCallback(() => {
     timerRef.current = setTimeout(() => {
