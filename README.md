@@ -1,8 +1,5 @@
 # 光影帧格
-> 欢迎光临！这是一个web网站，收集了我最喜欢的电影，以及我的摄影集。
 
-## 技术栈
-- 前端：React + Vite + ts + TailwindCSS
-- 样式/组件库： p5.js  Anime.js
+个人电影与摄影网站。
 
-- 数据存储与服务： supabase
+运行：配置 `VITE_SUPABASE_URL`、`VITE_SUPABASE_PUBLISHABLE_DEFAULT_KEY`，执行 `npm ci && npm run dev`。

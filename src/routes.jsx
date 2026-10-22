@@ -43,6 +43,13 @@ const routes = createBrowserRouter([
             Component: Gallery,
           })),
       },
+      {
+        path: '/master',
+        lazy: () =>
+          import('./pages/Master').then(({ Master }) => ({
+            Component: Master,
+          })),
+      },
     ],
   },
 ])

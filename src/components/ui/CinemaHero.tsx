@@ -145,7 +145,10 @@ export const CinemaHero = () => {
       <div className="relative z-10 mx-auto max-w-7xl px-6 py-20 text-center">
         <div className="mb-16">
           <h1 ref={titleRef} className="hero-title mb-6 text-black opacity-0">
-            My Favorite
+            My{' '}
+            <Link to="/master" className="cursor-pointer">
+              Favorite
+            </Link>
             <br />
             <span className="text-gray-600">movie & photograph</span>
           </h1>
