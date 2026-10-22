@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
-import { ArrowLeft, ArrowRight, ArrowUpRight, Shuffle, X } from 'lucide-react'
+import { ArrowLeft, ArrowRight, ArrowUpRight, X } from 'lucide-react'
 import { masterPhotographers, type MasterWork } from '../data/masterWorks'
 
 const formatTitle = (work: MasterWork, index: number) =>
@@ -32,15 +32,6 @@ export const Master = () => {
     }
     setRevealed(false)
     setSelectedIndex(index)
-  }
-
-  const showRandom = () => {
-    const count = photographer.works.length
-    const next =
-      selectedIndex === null
-        ? Math.floor(Math.random() * count)
-        : (selectedIndex + 1 + Math.floor(Math.random() * (count - 1))) % count
-    openWork(next)
   }
 
   const showNext = (direction: number) => {
@@ -131,14 +122,11 @@ export const Master = () => {
                 摄影阅览室
               </p>
               <h1 className="font-serif text-[clamp(3.6rem,8vw,7.5rem)] leading-[0.93] font-light tracking-[-0.075em]">
-                大师作品
-                <span className="ml-2 align-top text-[0.25em] tracking-normal text-[#a99a7b]">
-                  06
-                </span>
+                大师之作
               </h1>
             </div>
             <p className="max-w-[19rem] border-l border-[#b8b3a9] pl-5 text-sm leading-7 text-[#68655f]">
-              六种观看世界的方法。选一位摄影师，沿着作品慢慢看；或者随手抽取一帧，从陌生处开始。
+              展示一些摄影大师作品，后续会增加更新
             </p>
           </div>
         </div>
@@ -181,11 +169,6 @@ export const Master = () => {
                 </button>
               ))}
             </div>
-            <p className="mt-12 hidden text-xs leading-6 text-[#a19b91] lg:block">
-              01 — 06
-              <br />
-              用不同的目光，重新学习看见。
-            </p>
           </div>
         </aside>
 
@@ -193,7 +176,7 @@ export const Master = () => {
           className="min-w-0 px-5 pt-9 pb-24 sm:px-9 lg:px-12 lg:pt-10 xl:px-16"
           aria-labelledby="master-heading"
         >
-          <div className="mb-8 flex flex-wrap items-end justify-between gap-5 border-b border-[#dedcd5] pb-6">
+          <div className="mb-8 border-b border-[#dedcd5] pb-6">
             <div>
               <span className="mb-4 block text-[11px] tracking-[0.24em] text-[#857e72] uppercase">
                 NO. {String(photographerNumber).padStart(2, '0')} /{' '}
@@ -212,18 +195,6 @@ export const Master = () => {
                 {photographer.intro}
               </p>
             </div>
-            <button
-              type="button"
-              onClick={showRandom}
-              className="group inline-flex items-center gap-2 border border-[#b7afa0] px-4 py-3 text-xs tracking-wider transition-colors hover:border-[#20201e] hover:bg-[#20201e] hover:text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#20201e] motion-reduce:transition-none"
-            >
-              <Shuffle
-                size={14}
-                aria-hidden="true"
-                className="motion-safe:transition-transform motion-safe:group-hover:rotate-45"
-              />
-              随机看一张
-            </button>
           </div>
           <div className="mb-6 flex items-center justify-between text-[11px] tracking-[0.16em] text-[#8c877f] uppercase">
             <span>CONTACT SHEET / 作品索引</span>
@@ -274,9 +245,6 @@ export const Master = () => {
               </button>
             ))}
           </div>
-          <p className="mt-20 border-t border-[#dedcd5] pt-5 text-xs leading-6 text-[#928c82]">
-            图片用于个人摄影学习。作品名称、年份及出处以所链接的摄影师或馆藏资料为准；标记「未知」的项目不作推断。
-          </p>
         </section>
       </div>
 
