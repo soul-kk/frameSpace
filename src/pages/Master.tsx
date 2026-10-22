@@ -126,7 +126,9 @@ export const Master = () => {
               </h1>
             </div>
             <p className="max-w-[19rem] border-l border-[#b8b3a9] pl-5 text-sm leading-7 text-[#68655f]">
-              展示一些摄影大师作品，后续会增加更新
+              恭喜你发现了本网站的彩蛋！！！
+              <br />
+              这里负责收录我喜爱的摄影大师作品
             </p>
           </div>
         </div>
